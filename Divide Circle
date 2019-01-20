@@ -1,0 +1,90 @@
+import math
+
+from tkinter import *
+
+#本程序先画出一个圆，然后进行N等分，再将这些等分点向圆内缩进一点，距离不等
+
+#将这些等分点两两连接，会得到一 类椭圆图形。
+
+class PTS:#创建此类为了让坐标点x，y都归零。
+    def __init__(self):
+    self.x = 0
+
+    self.y = 0
+
+    points = []#建一个列表以放置等分oval椭圆后的各个等分点的坐标
+
+def LineToDemo():
+
+     screenx = 400#窗口宽
+
+     screeny = 400#窗口高
+
+#创建画布窗口
+
+     canvas = Canvas(width = screenx*3/2,height = screeny*3/2,bg = 'white')
+
+     AspectRatio = 1#画出的内部类椭圆的图形扁率，越小越扁，1即直接在圆上等分，大于1则会在圆外找点。
+
+     MAXPTS = 17# N等分圆的点数,可从3开始依次测试
+
+     h = screeny
+
+     w = screenx
+
+     move=h/3*AspectRatio#自加值，调整圆尽量完整画在画布上
+
+    xcenter = w / 2
+
+    ycenter = h / 2
+
+    radius = (h - 30) / (AspectRatio * 2) -10#确定圆的半径
+
+    print('圆半径：',radius)
+
+    step = 360 / MAXPTS#求出等分角
+
+    angle = 0.0#
+
+    for i in range(MAXPTS):#本循环功能：画出圆；求出各等分点坐标；
+
+        rads = angle * math.pi / 180.0
+
+        p = PTS()# p点归零（初始化），实例化的好处是
+
+        p.x = xcenter + int(math.cos(rads) * radius)
+
+# 每个等分点的x、y值，其中涉及到的数学知识自行推理，本程序之精华所在。
+
+        p.y = ycenter - int(math.sin(rads) * radius * AspectRatio)
+
+        print(p.x,p.y)#测试用
+
+        angle += step#角度递增
+
+        points.append(p)#
+
+    canvas.create_oval(xcenter - radius+move,ycenter - radius+move,
+    xcenter + radius+move,ycenter + radius+move,fill ='gray94')#
+
+#上面语句画出了圆，里面套的并不是椭圆，边界线其实是直线，由下面循环实现
+
+#基本思路就是确定N个等分点，然后从每个点开始作直线两两连接。
+
+    for i in range(MAXPTS):#
+
+        for j in range(i,MAXPTS):
+
+        #canvas.create_line(points[i].x+move,points[i].y+move,points[j].x+move,points[j].y+move,fill='brown')
+
+        canvas.create_line(points[i].x+move,points[i].y+move,
+
+        points[j].x+move,points[j].y+move,fill='Deep Pink')
+
+    canvas.pack()
+
+mainloop()
+
+if __name__ == '__main__':
+
+LineToDemo()
